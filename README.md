@@ -3,10 +3,10 @@
 I wrote this Python program for my ECE241 final project. It efficiently reformats memory initialization files (or MIFs) created using the instructor-provided [bmp2mif](https://www.eecg.utoronto.ca/~jayar/ece241_08F/vga/vga-bmp2mif.html) converter.
 
 I needed this code to reformat MIFs for a deck of cards; the code I wrote didn't accept the MIFs in the formatting the converter produces. This is what the converter produces (example here is the king of hearts):
-![Converter Output](image.png)
+![Converter Output](images/image.png)
 
 And this is what the serializer produces (which works with my Verilog):
-![Serializer Output](image_serialized.png)
+![Serializer Output](images/image_serialized.png)
 
 ## How can I use this?
 1. Download this Python file (or just copy the code) and create a new Python project in your IDE of choice.
