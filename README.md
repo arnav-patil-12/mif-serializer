@@ -17,6 +17,6 @@ And this is what the serializer produces (which works with my Verilog):
 I've included sample input and output MIFs if you don't have a bmp2mif converter on hand.
 
 ## Miscellaneous Notes
-I slapped an MIT license onto this thing so if it doesn't work it's on you LOL.
+I slapped an MIT license onto this thing so the program is provided "as-is," meaning if it doesn't work, it's not on me LOL.
 
 I think I want to take this further and write a program to replace the bmp2mif converter (especially if I end up needing it for my own little projects). I'll probably add further functionality to allow the user to choose address and data radices. 
