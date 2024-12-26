@@ -1,9 +1,8 @@
-# import libraries
 import re
 
 
-# implement functions
-def parse_mif_to_new_format(input_file, output_file):
+# function implementations
+def serialize_mif(input_file, output_file):
     print("Reformatting MIF file...")
     with open(input_file, 'r') as file:
         lines = file.readlines()  # had to check 106 notes for this
@@ -35,7 +34,7 @@ def parse_mif_to_new_format(input_file, output_file):
             continue
         # had to make gpt format the patterns
         if "[" in line and "]" in line:
-            match = re.match(r'\[(\d+)\.\.(\d+)\]\s*:\s*(.+);', line)
+            match = re.match(r'\[(\d+)\.\.(\d+)\]\s*:\s*(.+);', line)  # god bless ChatGPT
             if match:
                 start, end, data = int(match.group(1)), int(match.group(2)), match.group(3).split()
                 for i in range(start, end + 1):
@@ -47,12 +46,18 @@ def parse_mif_to_new_format(input_file, output_file):
                 for i, value in enumerate(data):
                     data_dict[address + i] = value
 
+    # prompt user for address radix (hex or dec)
+    print("Serialize with decimal \"DEC\" or hexadecimal \"HEX\" address radix? >>> ", end="")
+    address_format = input().strip().lower()
+    if address_format not in {"hex", "dec"}:
+        raise ValueError("Invalid address radix. Please enter either 'HEX' or 'DEC'")
+
     # write new MIF file
     print("Writing formatted MIF...")
     header = [
         f"WIDTH = {width};",
         f"DEPTH = {depth};",
-        "ADDRESS_RADIX = DEC;",
+        "ADDRESS_RADIX = HEX;" if address_format == "hex" else "ADDRESS_RADIX = DEC;",
         "DATA_RADIX = BIN;",
         "",
         "CONTENT",
@@ -62,7 +67,11 @@ def parse_mif_to_new_format(input_file, output_file):
 
     for addr in range(depth):
         value = data_dict.get(addr, "000")
-        content.append(f"{addr:<4}: {value};")
+        if address_format == "hex":
+            addr_str = f"{addr:X}"  # convert to hexadecimal
+        else:
+            addr_str = f"{addr}"  # keep in decimal format
+        content.append(f"{addr_str:<4}: {value};")
 
     footer = ["END;"]
 
@@ -70,11 +79,13 @@ def parse_mif_to_new_format(input_file, output_file):
         file.write("\n".join(header) + "\n")
         file.write("\n".join(content) + "\n")
         file.write("\n".join(footer) + "\n")
-    print("MIF successfully reformatted and stored in \"output.mif\"")
+    print("MIF successfully reformatted and stored in \"output.mif\"!")
+    return
 
 
-# call functions
-parse_mif_to_new_format("input.mif", "output.mif")
-# To convert multiple files:
-# parse_mif_to_new_format("input.mif", "output.mif")
-# parse_mif_to_new_format("input.mif", "output.mif")
+# main loop function call
+serialize_mif("MIFs/input.mif", "MIFs/output.mif")
+
+# to convert multiple files
+# serialize_mif("MIFs/input1.mif", "MIFs/output1.mif")
+# serialize_mif("MIFs/input2.mif", "MIFs/output2.mif")
