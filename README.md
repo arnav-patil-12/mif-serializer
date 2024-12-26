@@ -8,7 +8,7 @@ I needed this code to serialize MIFs for a deck of cards; the SDRAM[^1] IP core[
 
 And this is what the serializer produces (which works with my Verilog code):
 
-<img alt="Serializer Output" src="images/serialized_mif.png" width="300"/>
+<img alt="Serializer Output" src="images/serialized_mif.png" width="100"/>
 
 ## How can I use this?
 1. Download this Python file (or just copy the code) and create a new Python project in your IDE of choice.
