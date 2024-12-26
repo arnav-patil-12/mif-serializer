@@ -14,8 +14,8 @@ And this is what the program produces (which works with the IP core):
 1. Pull this repository and copy your input MIFs into the project directory. 
 2. Run ```python mif_converter.py``` in Terminal or Command Prompt.
 3. Enter your input and output MIF names/paths. 
-4. When prompted, enter "HEX" or "DEC" depending on whether you want the output MIF to be indexed with decimal or hexadecimal address radices.
-5. Enter "Q" to quit the program or continue converting more MIFs. 
+4. When prompted, enter ```HEX``` or ```DEC``` depending on whether you want the output MIF to be indexed with decimal or hexadecimal address radices.
+5. Enter ```Q``` to quit the program or continue converting more MIFs. 
 
 I've included sample input and output MIFs if you don't have a bmp2mif converter on hand. (I'm working on a Python version of the bmp2mif converter as well!)
 
@@ -26,7 +26,9 @@ The next update will first ask the user whether they wish to import input/output
 
 ## Recent Updates
 Dec 26, 2024 -- Execute once to convert all files, no need to edit the Python script and add more function calls.
+
 Dec 25, 2024 -- Program rewrites MIF with decimal or hexadecimal address radices based on user input. 
+
 Nov 18, 2024 -- First working version of the program. Much of the parsing logic was written by ChatGPT.
 
 [^1]: Synchronous Dynamic Random Access Memory (lots of big words but essentially means clocked memory)
