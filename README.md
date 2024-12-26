@@ -2,13 +2,13 @@
 ## What is this?
 I wrote this Python program for my ECE241 final project. It reformats memory initialization files (or MIFs) created using the instructor-provided [bmp2mif](https://www.eecg.utoronto.ca/~jayar/ece241_08F/vga/vga-bmp2mif.html) converter.
 
-I needed this code to serialize MIFs for a deck of cards; the SDRAM[^1] IP core[^2] for the DE1-SoC does not accept vectorized MIFs, because it needs to read only one address per clock cycle, input must be provided serially (one at a time). This is what the instructor-provided converter produces (example here is the king of hearts):
+I needed this code to serialize MIFs for a deck of cards; the SDRAM[^1] IP core[^2] for the DE1-SoC does not accept vectorized MIFs, because it needs to read only one address per clock cycle, input must be provided serially (one at a time). This is what the instructor-provided converter produces (example here is the king of diamonds):
 
-![Converter Output](images/vectorized_mif.png)
+<img alt="Converter Output" src="images/vectorized_mif.png" width="300"/>
 
 And this is what the serializer produces (which works with my Verilog code):
 
-![Serializer Output](images/serialized_mif.png)
+<img alt="Serializer Output" src="images/serialized_mif.png" width="300"/>
 
 ## How can I use this?
 1. Download this Python file (or just copy the code) and create a new Python project in your IDE of choice.
