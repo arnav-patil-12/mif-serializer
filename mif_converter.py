@@ -1,18 +1,25 @@
+import os
 import re
 
 
-# function implementations
 def serialize_mif(input_file, output_file):
     print("Reformatting MIF file...")
-    with open(input_file, 'r') as file:
-        lines = file.readlines()  # had to check 106 notes for this
-    print("MIF file found...")
-    # STOP USING SEMICOLONS
+
+    # attempt to open file and re-prompt user if not found
+    try:
+        with open(input_file, 'r') as file:
+            lines = file.readlines()
+        print("MIF found...")
+    except FileNotFoundError:
+        print(f"Error: File '{input_file}' not found.")
+        return False
+
     depth = None
     width = None
     original_mif_lines = []
     in_content = False
 
+    # read each line in the MIF
     for line in lines:
         if "Depth" in line:
             depth = int(re.search(r'\d+', line).group())
@@ -24,15 +31,15 @@ def serialize_mif(input_file, output_file):
             original_mif_lines.append(line.strip())
 
     if (depth is None) or (width is None):
-        raise ValueError("Bad MIF Error: Could not find DEPTH or WIDTH.")
+        print("Bad MIF Error: Could not find DEPTH or WIDTH.")
+        return False
 
-    # start parsing data
+    # parse data
     print("Parsing MIF...")
     data_dict = {}
     for line in original_mif_lines:
         if line.lower() in {"begin", "end;"}:
             continue
-        # had to make gpt format the patterns
         if "[" in line and "]" in line:
             match = re.match(r'\[(\d+)\.\.(\d+)\]\s*:\s*(.+);', line)  # god bless ChatGPT
             if match:
@@ -40,19 +47,20 @@ def serialize_mif(input_file, output_file):
                 for i in range(start, end + 1):
                     data_dict[i] = data[0]
         else:
-            match = re.match(r'(\d+)\s*:\s*(.+);', line)
+            match = re.match(r'(\d+)\s*:\s*(.+);', line)  # more ChatGPT
             if match:
                 address, data = int(match.group(1)), match.group(2).split()
                 for i, value in enumerate(data):
                     data_dict[address + i] = value
 
-    # prompt user for address radix (hex or dec)
+    # prompt user for address radix
     print("Serialize with decimal \"DEC\" or hexadecimal \"HEX\" address radix? >>> ", end="")
     address_format = input().strip().lower()
     if address_format not in {"hex", "dec"}:
-        raise ValueError("Invalid address radix. Please enter either 'HEX' or 'DEC'")
+        print("Invalid address radix. Please enter either 'HEX' or 'DEC'")
+        return False
 
-    # write new MIF file
+    # write the new MIF
     print("Writing formatted MIF...")
     header = [
         f"WIDTH = {width};",
@@ -79,13 +87,27 @@ def serialize_mif(input_file, output_file):
         file.write("\n".join(header) + "\n")
         file.write("\n".join(content) + "\n")
         file.write("\n".join(footer) + "\n")
-    print("MIF successfully reformatted and stored in \"output.mif\"!")
-    return
+
+    print(f"MIF successfully serialized and stored in '{output_file}'!")
+    return True
 
 
-# main loop function call
-serialize_mif("MIFs/input.mif", "MIFs/output.mif")
+# main loop
+while True:
+    print("Enter input file name (or 'Q' to quit) >>> ", end="")
+    in_file = input().strip()
+    if in_file.lower() == 'q':
+        print("Exiting program.")
+        break
 
-# to convert multiple files
-# serialize_mif("MIFs/input1.mif", "MIFs/output1.mif")
-# serialize_mif("MIFs/input2.mif", "MIFs/output2.mif")
+    if not os.path.isfile(in_file):
+        print(f"Error: File '{in_file}' does not exist. Please try again.")
+        continue
+
+    print("Enter output file name: ", end="")
+    out_file = input().strip()
+
+    if serialize_mif(in_file, out_file):
+        print("Conversion completed successfully.")
+    else:
+        print("Conversion failed. Please try again.")
